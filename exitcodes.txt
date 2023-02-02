@@ -1,2 +1,5 @@
 9000 - no arguments given
 9001 - not enough or too many arguments given
+9002 - the path to the tokenfile is invalid
+9003 - An I/O exception occurred trying to read the tokenfile
+9004 - An I/O exception occurred when trying to create a logfile
