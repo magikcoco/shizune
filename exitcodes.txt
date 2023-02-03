@@ -3,3 +3,4 @@
 9002 - the path to the tokenfile is invalid
 9003 - An I/O exception occurred trying to read the tokenfile
 9004 - An I/O exception occurred when trying to create a logfile
+9005 - An IllegalArgumentException occurred when attempting to start the DatabaseManager

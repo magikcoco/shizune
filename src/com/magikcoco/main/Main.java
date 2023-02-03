@@ -1,23 +1,24 @@
 package com.magikcoco.main;
 
 import com.magikcoco.managers.BotManager;
-
+import com.magikcoco.managers.DatabaseManager;
+import com.magikcoco.managers.LoggingManager;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Scanner;
 
 public class Main {
 
-    //TODO: basic shell for exit, help, information commands
-    //TODO: multithread functionality
 
     public static void main(String[] args) {
         if(args.length > 0){
             int argCounter = 0;
             String absolutePath = "";
             String connectionString = "";
+            String databaseName = "";
             for(String arg : args){
                 if(arg.toLowerCase().startsWith("-t")){
                     argCounter++;
@@ -25,26 +26,54 @@ public class Main {
                 } else if(arg.toLowerCase().startsWith("-d")){
                     argCounter++;
                     connectionString = arg.substring(2);
+                } else if(arg.toLowerCase().startsWith("-n")){
+                    argCounter++;
+                    databaseName = arg.substring(2);
                 }
             }
-            if(argCounter == 2){
-                //TODO: query database on startup to load information
-                //TODO: read tokenfile and pass it to a BotManager
+            if(argCounter == 3){
                 try {
+                    DatabaseManager.start(connectionString.replace('"',' ').strip(),databaseName.replace('"',' ').strip());
                     Path filePath = Paths.get(absolutePath);
                     BotManager.start(new String(Files.readAllBytes(filePath)));
                 } catch (InvalidPathException e) {
                     System.exit(9002);
                 } catch (IOException e){
                     System.exit(9003);
+                } catch (IllegalArgumentException e){
+                    System.exit(9005);
                 }
             } else {
-                System.out.println("Use: -t\"absolute/path/to/plaintext/tokenfile\" -d\"mongoDB-connection-string\"");
+                System.out.println("Use: -t\"absolute/path/to/plaintext/tokenfile\" -d\"mongoDB-connection-string\" -n\"databasename\"");
                 System.exit(9001);
             }
         } else {
-            System.out.println("Use: -t\"absolute/path/to/plaintext/tokenfile\" -d\"mongoDB-connection-string\"");
+            System.out.println("Use: -t\"absolute/path/to/plaintext/tokenfile\" -d\"mongoDB-connection-string\" -n\"databasename\"");
             System.exit(9000);
         }
+        //start a shell
+        Thread t = new Thread(() -> {
+            System.out.println("Shell starting...");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                LoggingManager.logError("Shell thread was interrupted");
+            }
+            System.out.println("Shell started!");
+            Scanner sc = new Scanner(System.in);
+            while(true){
+                System.out.print(">> ");
+                String command = sc.next();
+                switch(command.toLowerCase().strip()){
+                    case "exit":
+                        LoggingManager.logInfo("Exit called from terminal");
+                        System.exit(0);
+                        break;
+                    default:
+                        System.out.println("Unknown command:\nexit - exits the program");
+                }
+            }
+        });
+        t.start();
     }
 }
