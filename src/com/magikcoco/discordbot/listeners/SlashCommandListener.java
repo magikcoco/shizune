@@ -27,10 +27,18 @@ public class SlashCommandListener extends ListenerAdapter {
         }
     }
 
+    /**
+     * handles the ping command
+     * @param event a slashcommandinteraction event
+     */
     private void handlePing(SlashCommandInteractionEvent event){
         event.getHook().setEphemeral(true).sendMessage("Pong!").queue();
     }
 
+    /**
+     * handles an unrecognized command
+     * @param event a slashcommandinteraction event
+     */
     private void handleDefaultCase(SlashCommandInteractionEvent event){
         event.getHook().setEphemeral(true).sendMessage("I did not recognize that command").queue();
     }
