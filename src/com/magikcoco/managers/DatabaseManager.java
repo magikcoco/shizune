@@ -1,6 +1,5 @@
 package com.magikcoco.managers;
 
-import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -12,7 +11,6 @@ import java.util.function.Consumer;
 
 
 public class DatabaseManager {
-    //TODO: create a method for getting connection
 
     @SuppressWarnings("InstantiationOfUtilityClass")
     private static final DatabaseManager INSTANCE = new DatabaseManager();

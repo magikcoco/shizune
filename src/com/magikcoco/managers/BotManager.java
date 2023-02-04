@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
 public class BotManager {
@@ -38,7 +39,10 @@ public class BotManager {
     private static void addSlashCommands(){
         jda.updateCommands().addCommands(
                 Commands.slash("ping", "Pong!")
-                        .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MESSAGE_SEND))
+                        .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MESSAGE_SEND)),
+                Commands.slash("game", "Create a thread to set up and play a board game")
+                        .addOption(OptionType.STRING, "ThreadName", "The name of the thread that will be created", true, false)
+                        .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.CREATE_PUBLIC_THREADS))
         ).queue();
         LoggingManager.logInfo("Added Slash Commands to the bot");
     }
