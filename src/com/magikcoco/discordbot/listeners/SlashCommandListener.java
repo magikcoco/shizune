@@ -3,6 +3,7 @@ package com.magikcoco.discordbot.listeners;
 import com.magikcoco.discordbot.handlers.ThreadHandler;
 import com.magikcoco.managers.LoggingManager;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -20,6 +21,9 @@ public class SlashCommandListener extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         event.deferReply().queue();
         switch (event.getName()) {
+            case "closethread":
+                handleCloseThread(event);
+                break;
             case "game":
                 handleGame(event);
                 break;
@@ -32,6 +36,33 @@ public class SlashCommandListener extends ListenerAdapter {
         }
     }
 
+    /**
+     * handles the closethread slash command, which deletes the current active thread
+     * @param event the SlashCommandInteractionEvent that triggered this interaction
+     */
+    private void handleCloseThread(SlashCommandInteractionEvent event) {
+        if(isThread(event)){
+            String name = event.getChannel().getName();
+            Thread t = new Thread(()->{
+                try{
+                    event.getHook().setEphemeral(true).sendMessage("Attempting to delete the thread...").complete();
+                    GuildMessageChannelUnion parentChannel = event.getChannel().asThreadChannel().getParentMessageChannel();
+                    ThreadHandler.removeThread(event.getChannel().asThreadChannel());
+                    event.getChannel().asThreadChannel().delete().complete();
+                    parentChannel.sendMessage("The thread formerly known as "+name+" is no more").queue();
+                } catch (InsufficientPermissionException e) {
+                    LoggingManager.logError("I couldn't delete a thread with id: " + event.getChannel().getId());
+                    event.getChannel().asThreadChannel().sendMessage("I don't have permission to delete this thread").queue();
+                }
+            });
+            t.start();
+        }
+    }
+
+    /**
+     * handles the game slash command, which creates a new thread with the given name
+     * @param event the SlashCommandInteractionEvent that triggered this interaction
+     */
     private void handleGame(SlashCommandInteractionEvent event){
         if(isThreadAllowed(event)){
             Thread t = new Thread(()->{
@@ -63,6 +94,7 @@ public class SlashCommandListener extends ListenerAdapter {
             event.getHook().setEphemeral(true).sendMessage("This command is unsupported in this location").queue();
         }
     }
+
     /**
      * handles the ping command
      * @param event a slashcommandinteraction event
@@ -79,9 +111,27 @@ public class SlashCommandListener extends ListenerAdapter {
         event.getHook().setEphemeral(true).sendMessage("I did not recognize that command").queue();
     }
 
+    /**
+     * @param event a slashcommandinteraction event
+     * @return true if the channel the event was made in is a text channel, false otherwise
+     */
     private boolean isThreadAllowed(SlashCommandInteractionEvent event){
         try{
             event.getChannel().asTextChannel();
+            return true;
+        } catch(IllegalStateException e){
+            return false;
+        }
+    }
+
+
+    /**
+     * @param event a slashcommandinteraction event
+     * @return true if the current channel is a thread, false otherwise
+     */
+    private boolean isThread(SlashCommandInteractionEvent event){
+        try{
+            event.getChannel().asThreadChannel();
             return true;
         } catch(IllegalStateException e){
             return false;

@@ -42,6 +42,12 @@ public class DatabaseManager {
         return INSTANCE;
     }
 
+    public static DatabaseManager removeDocument(Map<String, Object> map){
+        Document document = new Document(map);
+        mongoDatabase.getCollection("ActiveThreads").deleteOne(document);
+        return INSTANCE;
+    }
+
     public static DatabaseManager endConnection(){
         mongoClient.close();
         return INSTANCE;

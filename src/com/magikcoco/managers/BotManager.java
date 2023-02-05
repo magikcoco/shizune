@@ -47,7 +47,9 @@ public class BotManager {
                         .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MESSAGE_SEND)),
                 Commands.slash("game", "Create a thread to set up and play a board game")
                         .addOption(OptionType.STRING, "threadname", "The name of the thread that will be created", true, false)
-                        .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.CREATE_PUBLIC_THREADS))
+                        .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.CREATE_PUBLIC_THREADS)),
+                Commands.slash("closethread", "Deletes this game thread")
+                        .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MESSAGE_SEND))
         ).queue();
         LoggingManager.logInfo("Added Slash Commands to the bot");
     }
