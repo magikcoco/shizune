@@ -67,7 +67,12 @@ public class Main {
                 switch(command.toLowerCase().strip()){
                     case "exit":
                         LoggingManager.logInfo("Exit called from terminal");
+                        BotManager.endConnection();
+                        DatabaseManager.endConnection();
                         System.exit(0);
+                        break;
+                    case "help":
+                        System.out.println("Available commands:\nhelp - print this menu\nexit - exits the program");
                         break;
                     default:
                         System.out.println("Unknown command:\nexit - exits the program");

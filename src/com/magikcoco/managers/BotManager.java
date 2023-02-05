@@ -36,6 +36,11 @@ public class BotManager {
         return INSTANCE;
     }
 
+    public static BotManager endConnection(){
+        jda.shutdownNow();
+        return INSTANCE;
+    }
+
     private static void addSlashCommands(){
         jda.updateCommands().addCommands(
                 Commands.slash("ping", "Pong!")

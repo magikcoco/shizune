@@ -41,4 +41,9 @@ public class DatabaseManager {
         mongoDatabase.getCollection("ActiveThreads").insertOne(document);
         return INSTANCE;
     }
+
+    public static DatabaseManager endConnection(){
+        mongoClient.close();
+        return INSTANCE;
+    }
 }
