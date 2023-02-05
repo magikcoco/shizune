@@ -41,7 +41,7 @@ public class BotManager {
                 Commands.slash("ping", "Pong!")
                         .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MESSAGE_SEND)),
                 Commands.slash("game", "Create a thread to set up and play a board game")
-                        .addOption(OptionType.STRING, "ThreadName", "The name of the thread that will be created", true, false)
+                        .addOption(OptionType.STRING, "threadname", "The name of the thread that will be created", true, false)
                         .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.CREATE_PUBLIC_THREADS))
         ).queue();
         LoggingManager.logInfo("Added Slash Commands to the bot");

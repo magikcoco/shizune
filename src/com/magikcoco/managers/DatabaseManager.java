@@ -5,6 +5,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
+import org.bson.Document;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -32,6 +33,12 @@ public class DatabaseManager {
             collectionMap.put(collectionName, mongoDatabase.getCollection(collectionName));
             LoggingManager.logInfo(collectionName + " (MongoDB collection) was found");
         });
+        return INSTANCE;
+    }
+
+    public static DatabaseManager addDocument(Map<String, Object> map){
+        Document document = new Document(map);
+        mongoDatabase.getCollection("ActiveThreads").insertOne(document);
         return INSTANCE;
     }
 }

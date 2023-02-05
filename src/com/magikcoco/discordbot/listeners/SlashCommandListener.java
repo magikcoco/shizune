@@ -1,5 +1,6 @@
 package com.magikcoco.discordbot.listeners;
 
+import com.magikcoco.discordbot.handlers.ThreadHandler;
 import com.magikcoco.managers.LoggingManager;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -38,9 +39,10 @@ public class SlashCommandListener extends ListenerAdapter {
                     ThreadChannel channel = event
                             .getChannel()
                             .asTextChannel()
-                            .createThreadChannel(Objects.requireNonNull(event.getOption("ThreadName")).getAsString())
+                            .createThreadChannel(Objects.requireNonNull(event.getOption("threadname")).getAsString())
                             .complete();
-                    channel.addThreadMember(Objects.requireNonNull(event.getMember())).queue();
+                    channel.addThreadMember(Objects.requireNonNull(event.getMember())).complete();
+                    ThreadHandler.addThread(channel);
                     //TODO: set up the thread
                     event.getHook().setEphemeral(true).sendMessage("Game thread created!").queue();
                 } catch (IllegalArgumentException e){
