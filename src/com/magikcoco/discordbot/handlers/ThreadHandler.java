@@ -17,11 +17,6 @@ public class ThreadHandler {
     public static void addThread(ThreadChannel threadChannel){
         HashMap<String, Object> threadInfo = new HashMap<>();
         threadInfo.put("thread-id", threadChannel.getId());
-        List<String> memberIds= new ArrayList<>();
-        for(Member member : threadChannel.getMembers()){
-            memberIds.add(member.getId());
-        }
-        threadInfo.put("member-ids", memberIds);
         DatabaseManager.addDocumentToActiveThreads(threadInfo);
     }
 
@@ -32,11 +27,6 @@ public class ThreadHandler {
     public static void removeThread(ThreadChannel threadChannel){
         HashMap<String, Object> threadInfo = new HashMap<>();
         threadInfo.put("thread-id", threadChannel.getId());
-        List<String> memberIds= new ArrayList<>();
-        for(Member member : threadChannel.getMembers()){
-            memberIds.add(member.getId());
-        }
-        threadInfo.put("member-ids", memberIds);
         DatabaseManager.removeDocumentFromActiveThreads(threadInfo);
     }
 }

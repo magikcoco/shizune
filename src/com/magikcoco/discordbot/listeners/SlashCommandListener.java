@@ -7,11 +7,10 @@ import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-
 import java.util.Objects;
 
-public class SlashCommandListener extends ListenerAdapter {
 
+public class SlashCommandListener extends ListenerAdapter {
 
     public SlashCommandListener(){
         LoggingManager.logInfo("SlashCommandListener has been created");
@@ -19,7 +18,7 @@ public class SlashCommandListener extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        event.deferReply().queue();
+        event.deferReply(true).queue();
         switch (event.getName()) {
             case "closethread":
                 handleCloseThread(event);
@@ -45,7 +44,7 @@ public class SlashCommandListener extends ListenerAdapter {
             String name = event.getChannel().getName();
             Thread t = new Thread(()->{
                 try{
-                    event.getHook().setEphemeral(true).sendMessage("Attempting to delete the thread...").complete();
+                    event.getHook().sendMessage("Attempting to delete the thread...").complete();
                     GuildMessageChannelUnion parentChannel = event.getChannel().asThreadChannel().getParentMessageChannel();
                     ThreadHandler.removeThread(event.getChannel().asThreadChannel());
                     event.getChannel().asThreadChannel().delete().complete();
@@ -56,6 +55,8 @@ public class SlashCommandListener extends ListenerAdapter {
                 }
             });
             t.start();
+        } else {
+            event.getHook().sendMessage("I can't do that here").queue();
         }
     }
 
@@ -72,26 +73,25 @@ public class SlashCommandListener extends ListenerAdapter {
                             .asTextChannel()
                             .createThreadChannel(Objects.requireNonNull(event.getOption("threadname")).getAsString())
                             .complete();
-                    channel.addThreadMember(Objects.requireNonNull(event.getMember())).complete();
                     ThreadHandler.addThread(channel);
                     //TODO: set up the thread
-                    event.getHook().setEphemeral(true).sendMessage("Game thread created!").queue();
+                    channel.sendMessage("I am a placeholder message for a button interaction").queue();
+                    event.getHook().sendMessage("Game thread created!").queue();
                 } catch (IllegalArgumentException e){
                     event.getHook()
-                            .setEphemeral(true)
                             .sendMessage("The ThreadName parameter was null, blank, empty, or longer than 100 characters. Please try again!")
                             .queue();
                 } catch (UnsupportedOperationException e){
-                    event.getHook().setEphemeral(true).sendMessage("This command is unsupported in this location").queue();
+                    event.getHook().sendMessage("This command is unsupported in this location").queue();
                 } catch (InsufficientPermissionException e){
-                    event.getHook().setEphemeral(true).sendMessage("I don't have permission to do that").queue();
+                    event.getHook().sendMessage("I don't have permission to do that").queue();
                 } catch (NullPointerException e) {
-                    event.getHook().setEphemeral(true).sendMessage("Something went wrong while making the thread").queue();
+                    event.getHook().sendMessage("Something went wrong while making the thread").queue();
                 }
             });
             t.start();
         } else {
-            event.getHook().setEphemeral(true).sendMessage("This command is unsupported in this location").queue();
+            event.getHook().sendMessage("This command is unsupported in this location").queue();
         }
     }
 
@@ -100,7 +100,7 @@ public class SlashCommandListener extends ListenerAdapter {
      * @param event a slashcommandinteraction event
      */
     private void handlePing(SlashCommandInteractionEvent event){
-        event.getHook().setEphemeral(true).sendMessage("Pong!").queue();
+        event.getHook().sendMessage("Pong!").queue();
     }
 
     /**
@@ -108,7 +108,7 @@ public class SlashCommandListener extends ListenerAdapter {
      * @param event a slashcommandinteraction event
      */
     private void handleDefaultCase(SlashCommandInteractionEvent event){
-        event.getHook().setEphemeral(true).sendMessage("I did not recognize that command").queue();
+        event.getHook().sendMessage("I did not recognize that command").queue();
     }
 
     /**
