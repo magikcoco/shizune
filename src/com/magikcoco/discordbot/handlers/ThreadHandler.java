@@ -22,7 +22,7 @@ public class ThreadHandler {
             memberIds.add(member.getId());
         }
         threadInfo.put("member-ids", memberIds);
-        DatabaseManager.addDocument(threadInfo);
+        DatabaseManager.addDocumentToActiveThreads(threadInfo);
     }
 
     /**
@@ -37,6 +37,6 @@ public class ThreadHandler {
             memberIds.add(member.getId());
         }
         threadInfo.put("member-ids", memberIds);
-        DatabaseManager.removeDocument(threadInfo);
+        DatabaseManager.removeDocumentFromActiveThreads(threadInfo);
     }
 }

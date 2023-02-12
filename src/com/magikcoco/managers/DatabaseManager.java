@@ -36,13 +36,13 @@ public class DatabaseManager {
         return INSTANCE;
     }
 
-    public static DatabaseManager addDocument(Map<String, Object> map){
+    public static DatabaseManager addDocumentToActiveThreads(Map<String, Object> map){
         Document document = new Document(map);
         mongoDatabase.getCollection("ActiveThreads").insertOne(document);
         return INSTANCE;
     }
 
-    public static DatabaseManager removeDocument(Map<String, Object> map){
+    public static DatabaseManager removeDocumentFromActiveThreads(Map<String, Object> map){
         Document document = new Document(map);
         mongoDatabase.getCollection("ActiveThreads").deleteOne(document);
         return INSTANCE;
