@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import java.util.Objects;
 
 
@@ -74,8 +75,13 @@ public class SlashCommandListener extends ListenerAdapter {
                             .createThreadChannel(Objects.requireNonNull(event.getOption("threadname")).getAsString())
                             .complete();
                     ThreadHandler.addThread(channel);
-                    //TODO: set up the thread
-                    channel.sendMessage("I am a placeholder message for a button interaction").queue();
+                    channel.sendMessage("Select the button for what type of game to play")
+                            .addActionRow(
+                                    Button.primary("shizune-chargen","Character Generation"),
+                                    Button.primary("shizune-ttrpg","Tabletop Roleplaying Game"),
+                                    Button.primary("shizune-bg","Tabletop Board Game")
+                            )
+                            .queue();
                     event.getHook().sendMessage("Game thread created!").queue();
                 } catch (IllegalArgumentException e){
                     event.getHook()
@@ -123,7 +129,6 @@ public class SlashCommandListener extends ListenerAdapter {
             return false;
         }
     }
-
 
     /**
      * @param event a slashcommandinteraction event

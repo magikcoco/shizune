@@ -1,5 +1,6 @@
 package com.magikcoco.managers;
 
+import com.magikcoco.discordbot.listeners.ComponentInteractionListener;
 import com.magikcoco.discordbot.listeners.SlashCommandListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -56,5 +57,6 @@ public class BotManager {
 
     private static void addListeners(){
         jda.addEventListener(new SlashCommandListener());
+        jda.addEventListener(new ComponentInteractionListener());
     }
 }

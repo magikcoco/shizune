@@ -5,10 +5,13 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import org.bson.Document;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.logging.Filter;
 
 
 public class DatabaseManager {
@@ -39,6 +42,15 @@ public class DatabaseManager {
     public static DatabaseManager addDocumentToActiveThreads(Map<String, Object> map){
         Document document = new Document(map);
         mongoDatabase.getCollection("ActiveThreads").insertOne(document);
+        return INSTANCE;
+    }
+
+    public static DatabaseManager appendToDocumentInActiveThreads(String threadId, String fieldName, Object value){
+        MongoCollection<Document> collection = mongoDatabase.getCollection("ActiveThreads");
+        Document document = collection.find(Filters.eq("thread-id",threadId)).first();
+        if(document != null){
+            collection.updateOne(Filters.eq("_id", document.get("_id")), Updates.set(fieldName,value));
+        }
         return INSTANCE;
     }
 
