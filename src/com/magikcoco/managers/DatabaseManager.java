@@ -1,5 +1,6 @@
 package com.magikcoco.managers;
 
+import com.magikcoco.game.engine.Space;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -58,6 +59,15 @@ public class DatabaseManager {
         Document document = new Document(map);
         mongoDatabase.getCollection("ActiveThreads").deleteOne(document);
         return INSTANCE;
+    }
+
+    public static void addDocumentToGameMaps(Map<String, Object> map){
+        Document document = new Document(map);
+        if(mongoDatabase.getCollection("GameMaps").find(Filters.eq("Map Name", map.get("Map Name"))).first() == null){
+            mongoDatabase.getCollection("GameMaps").insertOne(document);
+        } else {
+            LoggingManager.logWarning("Attempted to insert a map that already exists: " + map.get("Map Name"));
+        }
     }
 
     public static DatabaseManager endConnection(){

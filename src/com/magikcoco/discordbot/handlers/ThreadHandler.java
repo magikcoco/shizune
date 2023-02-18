@@ -1,11 +1,8 @@
 package com.magikcoco.discordbot.handlers;
 
 import com.magikcoco.managers.DatabaseManager;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class ThreadHandler {
 

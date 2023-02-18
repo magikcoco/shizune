@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GameManager {
-    //TODO: Create a GameManager
-    //TODO: map ThreadHandler -> GameEngine
 
     private static Map<String, GameEngine> threadIdGameMap = new HashMap<>();
 

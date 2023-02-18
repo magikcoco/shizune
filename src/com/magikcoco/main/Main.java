@@ -1,5 +1,6 @@
 package com.magikcoco.main;
 
+import com.magikcoco.game.data.LeavingEarth;
 import com.magikcoco.managers.BotManager;
 import com.magikcoco.managers.DatabaseManager;
 import com.magikcoco.managers.LoggingManager;
@@ -51,6 +52,11 @@ public class Main {
             System.out.println("Use: -t\"absolute/path/to/plaintext/tokenfile\" -d\"mongoDB-connection-string\" -n\"databasename\"");
             System.exit(9000);
         }
+        //build maps
+        Thread m = new Thread(() -> {
+            LeavingEarth.buildMap();
+        });
+        m.start();
         //start a shell
         Thread t = new Thread(() -> {
             System.out.println("Shell starting...");
